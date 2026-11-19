@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Казино удачі</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #10002b, #240046, #3c096c);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.game {
+    width: 100%;
+    max-width: 650px;
+    padding: 30px;
+    text-align: center;
+    background: rgba(15, 5, 35, 0.9);
+    border: 2px solid #c77dff;
+    border-radius: 25px;
+    box-shadow: 0 0 30px #9d4edd;
+}
+
+h1 {
+    color: #ffd60a;
+    font-size: 38px;
+    margin-bottom: 10px;
+    text-shadow: 0 0 15px #ff9e00;
+}
+
+.subtitle {
+    color: #e0aaff;
+    margin-bottom: 25px;
+}
+
+.player {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.stat {
+    background: #3c096c;
+    border: 1px solid #c77dff;
+    padding: 12px 18px;
+    border-radius: 12px;
+    min-width: 130px;
+}
+
+.stat span {
+    color: #ffd60a;
+    font-weight: bold;
+}
+
+.machine {
+    background: linear-gradient(145deg, #5a189a, #240046);
+    border: 3px solid #ffd60a;
+    border-radius: 20px;
+    padding: 18px;
+    box-shadow: inset 0 0 20px #9d4edd;
+}
+
+.slots {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.slot {
+    height: 100px;
+    background: #fff;
+    border: 3px solid #ffd60a;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 48px;
+    box-shadow: 0 0 12px #ffd60a;
+    transition: transform 0.2s;
+}
+
+.slot.spin {
+    animation: spin 0.4s ease-in-out;
+}
+
+@keyframes spin {
+    0% {
+        transform: scale(0.7) rotate(-15deg);
+    }
+    50% {
+        transform: scale(1.15) rotate(10deg);
+    }
+    100% {
+        transform: scale(1) rotate(0);
+    }
+}
+
+.slot.winner {
+    background: #fff3b0;
+    box-shadow: 0 0 25px #ffd60a;
+    border-color: #ff8800;
+}
+
+.message {
+    min-height: 55px;
+    margin: 20px 0;
+    font-size: 20px;
+    color: #ffd60a;
+    font-weight: bold;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.game-button {
+    padding: 14px 25px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #ffba08, #f48c06);
+    color: #240046;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.game-button:hover {
+    transform: scale(1.06);
+    box-shadow: 0 0 18px #ffd60a;
+}
+
+.game-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.restart {
+    background: linear-gradient(135deg, #c77dff, #9d4edd);
+    color: white;
+}
+
+.rules {
+    margin-top: 25px;
+    padding: 15px;
+    background: rgba(157, 78, 221, 0.2);
+    border-radius: 12px;
+    line-height: 1.7;
+    color: #e0aaff;
+    font-size: 14px;
+}
+
+@media (max-width: 500px) {
+    .game {
+        padding: 18px;
+    }
+
+    h1 {
+        font-size: 29px;
+    }
+
+    .slot {
+        height: 75px;
+        font-size: 36px;
+    }
+
+    .game-button {
+        width: 100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+    <h1>🎰 КАЗИНО УДАЧІ 🎰</h1>
+    <p class="subtitle">Випробуй свою удачу та виграй джекпот!</p>
+
+    <div class="player" id="playerName">Гравець: Гість</div>
+
+    <div class="stats">
+        <div class="stat">
+            🪙 Монети: <span id="coins">0</span>
+        </div>
+
+        <div class="stat">
+            🎯 Спроби: <span id="attempts">0 / 3</span>
+        </div>
+    </div>
+
+    <div class="machine">
+        <div class="slots">
+            <div class="slot" id="slot0">💎</div>
+            <div class="slot" id="slot1">👑</div>
+            <div class="slot" id="slot2">⭐</div>
+
+            <div class="slot" id="slot3">🔔</div>
+            <div class="slot" id="slot4">🎁</div>
+            <div class="slot" id="slot5">💰</div>
+
+            <div class="slot" id="slot6">🏆</div>
+            <div class="slot" id="slot7">🔮</div>
+            <div class="slot" id="slot8">💎</div>
+        </div>
+    </div>
+
+    <div class="message" id="message">
+        Натисни «Грати», щоб почати!
+    </div>
+
+    <div class="controls">
+        <button class="game-button" id="playButton" onclick="playGame()">
+            🎲 Грати
+        </button>
+
+        <button class="game-button restart" onclick="newGame()">
+            🔄 Нова гра
+        </button>
+    </div>
+
+    <div class="rules">
+        <h3>📜 Правила гри</h3>
+        <p>1. У тебе є 3 спроби.</p>
+        <p>2. Для перемоги потрібно зібрати 3 однакові символи в одному рядку.</p>
+        <p>3. За перемогу ти отримуєш 100 монет.</p>
+        <p>4. У кожній спробі є підвищений шанс на виграш.</p>
+    </div>
+
+</div>
+
+<script>
+var fruits = [
+    "💎",
+    "👑",
+    "⭐",
+    "🔔",
+    "🎁",
+    "💰",
+    "🏆",
+    "🔮"
+];
+
+var attempts = 0;
+var coins = 0;
+var maxAttempts = 3;
+var gameOver = false;
+var player = prompt("Введіть своє ім'я:");
+
+if (player === null || player.trim() === "") {
+    player = "Гість";
+}
+
+document.getElementById("playerName").innerHTML =
+    "Гравець: " + player;
+
+function randomSymbol(excluded) {
+    var available = fruits.filter(function(symbol) {
+        return !excluded.includes(symbol);
+    });
+
+    return available[Math.floor(Math.random() * available.length)];
+}
+
+function generateRandomBoard() {
+    var board = [];
+
+    for (var column = 0; column < 3; column++) {
+        var used = [];
+
+        for (var row = 0; row < 3; row++) {
+            var symbol = randomSymbol(used);
+            used.push(symbol);
+            board[row * 3 + column] = symbol;
+        }
+    }
+
+    return board;
+}
+
+function generateWinningBoard() {
+    var board = [];
+    var winningRow = Math.floor(Math.random() * 3);
+    var winningSymbol = fruits[Math.floor(Math.random() * fruits.length)];
+
+    for (var column = 0; column < 3; column++) {
+        var used = [winningSymbol];
+
+        for (var row = 0; row < 3; row++) {
+            if (row === winningRow) {
+                board[row * 3 + column] = winningSymbol;
+            } else {
+                var symbol = randomSymbol(used);
+                used.push(symbol);
+                board[row * 3 + column] = symbol;
+            }
+        }
+    }
+
+    return board;
+}
+
+function checkWin(board) {
+    for (var row = 0; row < 3; row++) {
+        var first = board[row * 3];
+
+        if (
+            first === board[row * 3 + 1] &&
+            first === board[row * 3 + 2]
+        ) {
+            return row;
+        }
+    }
+
+    return -1;
+}
+
+function playGame() {
+    if (gameOver || attempts >= maxAttempts) {
+        return;
+    }
+
+    attempts++;
+
+    document.getElementById("attempts").innerHTML =
+        attempts + " / " + maxAttempts;
+
+    document.getElementById("message").innerHTML =
+        "🍀 Крутимо барабани...";
+
+    document.getElementById("playButton").disabled = true;
+
+    var board;
+
+    if (Math.random() < 0.40) {
+        board = generateWinningBoard();
+    } else {
+        board = generateRandomBoard();
+    }
+
+    for (var i = 0; i < 9; i++) {
+        var slot = document.getElementById("slot" + i);
+
+        slot.classList.remove("winner");
+        slot.classList.add("spin");
+        slot.innerHTML = board[i];
+    }
+
+    setTimeout(function() {
+        for (var i = 0; i < 9; i++) {
+            document.getElementById("slot" + i)
+                .classList.remove("spin");
+        }
+
+        var winningRow = checkWin(board);
+
+        if (winningRow !== -1) {
+            coins += 100;
+
+            document.getElementById("coins").innerHTML = coins;
+
+            for (var i = 0; i < 3; i++) {
+                document.getElementById(
+                    "slot" + (winningRow * 3 + i)
+                ).classList.add("winner");
+            }
+
+            document.getElementById("message").innerHTML =
+                "🎉 ВІТАЄМО! ТИ ВИГРАЛА 100 МОНЕТ! 🎉";
+
+            gameOver = true;
+            document.getElementById("playButton").disabled = true;
+
+        } else if (attempts >= maxAttempts) {
+            document.getElementById("message").innerHTML =
+                "😢 Спроби закінчилися! Натисни «Нова гра».";
+
+            gameOver = true;
+            document.getElementById("playButton").disabled = true;
+
+        } else {
+            document.getElementById("message").innerHTML =
+                "🍀 Не пощастило! Спробуй ще раз.";
+
+            document.getElementById("playButton").disabled = false;
+        }
+
+    }, 500);
+}
+
+function newGame() {
+    attempts = 0;
+    gameOver = false;
+
+    document.getElementById("attempts").innerHTML = "0 / 3";
+    document.getElementById("message").innerHTML =
+        "Нова гра почалася! Удачі! 🍀";
+
+    document.getElementById("playButton").disabled = false;
+
+    for (var i = 0; i < 9; i++) {
+        var slot = document.getElementById("slot" + i);
+
+        slot.innerHTML = fruits[
+            Math.floor(Math.random() * fruits.length)
+        ];
+
+        slot.classList.remove("winner");
+        slot.classList.remove("spin");
+    }
+}
+</script>
+
+</body>
+</html>
