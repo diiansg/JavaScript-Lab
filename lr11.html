@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinguaLove — Language Learning</title>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #fce4f3, #eee3ff, #e5e9ff);
+            color: #423450;
+            padding: 30px 15px;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            max-width: 850px;
+            margin: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 15px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #c77dff, #ff8bc2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 5px 15px #c77dff55;
+        }
+
+        .logo h1 {
+            font-size: 25px;
+            color: #65447f;
+        }
+
+        .logo h1 span {
+            color: #e77cb5;
+        }
+
+        .logo p {
+            font-size: 12px;
+            color: #9684a5;
+        }
+
+        .level-label {
+            background: white;
+            padding: 11px 18px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #a16dc1;
+            box-shadow: 0 4px 15px #8b65a515;
+        }
+
+        .welcome {
+            background: linear-gradient(120deg, #b77ce5, #ed8cbd);
+            border-radius: 25px;
+            padding: 30px 35px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 10px 30px #bc7edb40;
+            margin-bottom: 25px;
+        }
+
+        .small-label {
+            font-size: 11px;
+            letter-spacing: 2px;
+            opacity: 0.85;
+            font-weight: bold;
+        }
+
+        .welcome h2 {
+            font-size: 27px;
+            margin: 12px 0;
+            line-height: 1.3;
+        }
+
+        .welcome h2 span {
+            color: #ffe5f3;
+        }
+
+        .welcome p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .welcome-illustration {
+            font-size: 75px;
+            filter: drop-shadow(0 8px 8px #75458a40);
+        }
+
+        .learning-section {
+            background: #ffffffd9;
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 10px 35px #8b65a51c;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-heading h3 {
+            font-size: 21px;
+            color: #614575;
+        }
+
+        .section-heading p {
+            font-size: 12px;
+            color: #a092ad;
+            margin-top: 5px;
+        }
+
+        .counter {
+            background: #f4e9fc;
+            color: #a16dc1;
+            font-weight: bold;
+            padding: 10px 16px;
+            border-radius: 12px;
+            white-space: nowrap;
+        }
+
+        .progress-container {
+            margin-top: 25px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #9987a7;
+            margin-bottom: 9px;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 9px;
+            background: #f0e8f5;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #b77ce5, #f08abf);
+            border-radius: 20px;
+            transition: width 0.4s;
+        }
+
+        .word-card {
+            position: relative;
+            width: 100%;
+            min-height: 230px;
+            margin-top: 25px;
+            border: 2px solid #f2e4fa;
+            border-radius: 22px;
+            background: linear-gradient(145deg, #fff, #fcf5ff);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+            color: #674c80;
+            overflow: hidden;
+        }
+
+        .word-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px #b77ce533;
+            border-color: #d6a4ee;
+        }
+
+        .word-card:disabled {
+            cursor: default;
+            opacity: 1;
+        }
+
+        .card-decoration {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 30px;
+            color: #e7c5f5;
+        }
+
+        .card-label {
+            color: #b18bc7;
+            font-size: 11px;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+
+        .word {
+            font-size: 39px;
+            font-weight: bold;
+            margin: 15px 0;
+            color: #75528f;
+        }
+
+        .card-hint {
+            color: #b4a5bf;
+            font-size: 12px;
+        }
+
+        .input-area {
+            margin-top: 22px;
+        }
+
+        .input-area label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 13px;
+            font-weight: bold;
+            color: #725788;
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 16px 18px;
+            border: 2px solid #eee2f5;
+            border-radius: 13px;
+            outline: none;
+            font-size: 15px;
+            color: #59416f;
+            background: #fdfaff;
+            transition: 0.3s;
+        }
+
+        .answer-input:focus {
+            border-color: #c28be4;
+            box-shadow: 0 0 0 4px #c28be422;
+        }
+
+        .answer-input:disabled {
+            opacity: 0.7;
+        }
+
+        .feedback {
+            min-height: 25px;
+            margin-top: 12px;
+            font-size: 13px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .feedback.correct {
+            color: #42ad7b;
+        }
+
+        .feedback.incorrect {
+            color: #e16d91;
+        }
+
+        .action-button {
+            width: 100%;
+            margin-top: 15px;
+            padding: 15px;
+            border: none;
+            border-radius: 13px;
+            background: linear-gradient(90deg, #b77ce5, #ed8cbd);
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px #c17cdb40;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px #c17cdb60;
+        }
+
+        .statistics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .stat-card {
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .correct-stat {
+            background: #e7f8ef;
+            color: #40a777;
+        }
+
+        .incorrect-stat {
+            background: #fff0f3;
+            color: #dd708d;
+        }
+
+        .stat-card p {
+            font-size: 13px;
+            margin-bottom: 7px;
+        }
+
+        .stat-card strong {
+            font-size: 28px;
+        }
+
+        .footer {
+            text-align: center;
+            color: #a08cae;
+            font-size: 12px;
+            margin-top: 22px;
+        }
+
+        /* Модальне вікно */
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: #38244799;
+            backdrop-filter: blur(6px);
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            z-index: 10;
+        }
+
+        .modal {
+            background: white;
+            width: 100%;
+            max-width: 420px;
+            border-radius: 25px;
+            padding: 35px 25px;
+            text-align: center;
+            box-shadow: 0 15px 50px #35204455;
+            animation: appear 0.3s ease;
+        }
+
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-icon {
+            font-size: 65px;
+            margin-bottom: 10px;
+        }
+
+        .modal h2 {
+            color: #77528e;
+            font-size: 25px;
+            margin-bottom: 10px;
+        }
+
+        .modal p {
+            color: #9a8ba5;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .result-percent {
+            font-size: 43px;
+            font-weight: bold;
+            color: #d17fbc;
+            margin: 18px 0;
+        }
+
+        .modal-button {
+            margin-top: 20px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 18px 12px;
+            }
+
+            .welcome {
+                padding: 25px 20px;
+            }
+
+            .welcome h2 {
+                font-size: 21px;
+            }
+
+            .welcome-illustration {
+                font-size: 50px;
+            }
+
+            .learning-section {
+                padding: 20px 15px;
+            }
+
+            .section-heading h3 {
+                font-size: 18px;
+            }
+
+            .word {
+                font-size: 32px;
+            }
+
+            .word-card {
+                min-height: 200px;
+            }
+
+            .level-label {
+                font-size: 10px;
+                padding: 9px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="app-container">
+
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">✦</div>
+                <div>
+                    <h1>Lingua<span>Love</span></h1>
+                    <p>Твій шлях до нової мови</p>
+                </div>
+            </div>
+            <div class="level-label">ENGLISH • РІВЕНЬ 1</div>
+        </header>
+
+        <section class="welcome">
+            <div>
+                <span class="small-label">ЧАС ВЧИТИСЯ!</span>
+                <h2>Привіт! Готова<br>вивчати нові слова? ♡</h2>
+                <p>Перекладай слова та покращуй свої знання щодня.</p>
+            </div>
+            <div class="welcome-illustration">📚</div>
+        </section>
+
+        <section class="learning-section">
+
+            <div class="section-heading">
+                <div>
+                    <h3>Твоє тренування</h3>
+                    <p>Переклади слово з англійської на українську</p>
+                </div>
+                <div class="counter" id="stepCounter">01 / 10</div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span>Твій прогрес</span>
+                    <span id="progressText">0%</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+            </div>
+
+            <button class="word-card" id="wordCard" type="button">
+                <span class="card-decoration">✧</span>
+                <span class="card-label">ПЕРЕКЛАДИ ЦЕ СЛОВО</span>
+                <span class="word" id="currentWord">Beautiful</span>
+                <span class="card-hint" id="cardHint">Натисни на картку для перевірки ♡</span>
+            </button>
+
+            <div class="input-area">
+                <label for="answerInput">Твій переклад:</label>
+                <input
+                    type="text"
+                    id="answerInput"
+                    class="answer-input"
+                    placeholder="Введи переклад українською..."
+                    autocomplete="off"
+                >
+            </div>
+
+            <div class="feedback" id="feedback"></div>
+
+            <button class="action-button" id="actionButton">
+                Перевірити відповідь ✨
+            </button>
+
+            <div class="statistics">
+                <div class="stat-card correct-stat">
+                    <p>✓ Правильно</p>
+                    <strong id="correctCount">0</strong>
+                </div>
+
+                <div class="stat-card incorrect-stat">
+                    <p>✕ Неправильно</p>
+                    <strong id="incorrectCount">0</strong>
+                </div>
+            </div>
+
+        </section>
+
+        <div class="footer">
+            З любов'ю до навчання ♡ LinguaLove
+        </div>
+
+    </main>
+
+    <!-- Модальне вікно -->
+
+    <div class="modal-overlay" id="resultModal">
+        <div class="modal">
+            <div class="modal-icon" id="resultIcon">🏆</div>
+            <h2>Тренування завершено!</h2>
+            <p>Ось результат твого сьогоднішнього заняття:</p>
+
+            <div class="result-percent" id="resultPercent">0%</div>
+
+            <p id="resultLevel"></p>
+            <p id="resultStatistics"></p>
+
+            <button class="action-button modal-button" id="restartButton">
+                Спробувати ще раз ♡
+            </button>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+
+            // Список слів для вивчення
+
+            const words = [
+                { english: "Beautiful", ukrainian: "красивий" },
+                { english: "Apple", ukrainian: "яблуко" },
+                { english: "Friend", ukrainian: "друг" },
+                { english: "Morning", ukrainian: "ранок" },
+                { english: "Family", ukrainian: "сім'я" },
+                { english: "House", ukrainian: "будинок" },
+                { english: "Water", ukrainian: "вода" },
+                { english: "Happiness", ukrainian: "щастя" },
+                { english: "Dream", ukrainian: "мрія" },
+                { english: "Love", ukrainian: "любов" },
+                { english: "Flower", ukrainian: "квітка" },
+                { english: "Sunshine", ukrainian: "сонячне світло" }
+            ];
+
+            const totalWords = 10;
+
+            let currentIndex = 0;
+            let correct = 0;
+            let incorrect = 0;
+            let answered = false;
+            let selectedWords = [];
+
+            // Перемішування слів у випадковому порядку
+
+            function shuffleWords() {
+                selectedWords = [...words];
+
+                selectedWords.sort(function () {
+                    return Math.random() - 0.5;
+                });
+
+                selectedWords = selectedWords.slice(0, totalWords);
+            }
+
+            // Відображення поточного слова
+
+            function showWord() {
+
+                const word = selectedWords[currentIndex];
+
+                $("#currentWord").text(word.english);
+
+                $("#stepCounter").text(
+                    String(currentIndex + 1).padStart(2, "0") +
+                    " / " + totalWords
+                );
+
+                $("#progressText").text(
+                    Math.round((currentIndex / totalWords) * 100) + "%"
+                );
+
+                $("#progressBar").css(
+                    "width",
+                    (currentIndex / totalWords * 100) + "%"
+                );
+
+                $("#answerInput").val("").prop("disabled", false);
+
+                $("#feedback")
+                    .text("")
+                    .removeClass("correct incorrect");
+
+                $("#cardHint").text("Натисни на картку для перевірки ♡");
+
+                $("#wordCard").css("border-color", "#f2e4fa");
+
+                $("#actionButton").text("Перевірити відповідь ✨");
+
+                answered = false;
+            }
+
+            // Перевірка відповіді
+
+            function checkAnswer() {
+
+                if (answered) {
+                    return;
+                }
+
+                const userAnswer = $("#answerInput").val().trim().toLowerCase();
+
+                if (userAnswer === "") {
+
+                    $("#feedback")
+                        .text("Спочатку введи свій переклад!")
+                        .removeClass("correct")
+                        .addClass("incorrect");
+
+                    $("#answerInput").focus();
+
+                    return;
+                }
+
+                const correctAnswer =
+                    selectedWords[currentIndex].ukrainian.toLowerCase();
+
+                answered = true;
+
+                if (userAnswer === correctAnswer) {
+
+                    correct++;
+
+                    $("#feedback")
+                        .text("Чудово! Правильна відповідь! ♡")
+                        .removeClass("incorrect")
+                        .addClass("correct");
+
+                    $("#wordCard").css("border-color", "#8ed9ad");
+
+                } else {
+
+                    incorrect++;
+
+                    $("#feedback")
+                        .text("Правильна відповідь: " +
+                            selectedWords[currentIndex].ukrainian)
+                        .removeClass("correct")
+                        .addClass("incorrect");
+
+                    $("#wordCard").css("border-color", "#f0a0b5");
+                }
+
+                $("#correctCount").text(correct);
+                $("#incorrectCount").text(incorrect);
+
+                $("#answerInput").prop("disabled", true);
+
+                $("#cardHint").text("Натисни кнопку нижче, щоб продовжити");
+
+                if (currentIndex === totalWords - 1) {
+                    $("#actionButton").text("Переглянути результат 🏆");
+                } else {
+                    $("#actionButton").text("Наступне слово →");
+                }
+            }
+
+            // Перехід до наступного слова
+
+            function nextWord() {
+
+                if (!answered) {
+                    return;
+                }
+
+                currentIndex++;
+
+                if (currentIndex < totalWords) {
+
+                    showWord();
+
+                } else {
+
+                    finishTraining();
+
+                }
+            }
+
+            // Визначення рівня знань
+
+            function finishTraining() {
+
+                const percent = Math.round((correct / totalWords) * 100);
+
+                let level;
+                let icon;
+
+                if (percent >= 90) {
+                    level = "Відмінно! Ти чудово знаєш англійську!";
+                    icon = "🏆";
+                } else if (percent >= 70) {
+                    level = "Дуже добре! Ти маєш гарні знання!";
+                    icon = "🌸";
+                } else if (percent >= 50) {
+                    level = "Непогано! Є ще над чим попрацювати!";
+                    icon = "💜";
+                } else {
+                    level = "Потрібно більше практики. Не здавайся!";
+                    icon = "📚";
+                }
+
+                $("#progressBar").css("width", "100%");
+                $("#progressText").text("100%");
+
+                $("#resultIcon").text(icon);
+                $("#resultPercent").text(percent + "%");
+                $("#resultLevel").text(level);
+
+                $("#resultStatistics").text(
+                    "Правильних відповідей: " + correct +
+                    " | Неправильних відповідей: " + incorrect
+                );
+
+                $("#resultModal").css("display", "flex");
+            }
+
+            // Натискання на картку
+
+            $("#wordCard").on("click", function () {
+
+                if (!answered) {
+                    checkAnswer();
+                }
+
+            });
+
+            // Натискання на кнопку
+
+            $("#actionButton").on("click", function () {
+
+                if (answered) {
+                    nextWord();
+                } else {
+                    checkAnswer();
+                }
+
+            });
+
+            // Перевірка клавішею Enter
+
+            $("#answerInput").on("keydown", function (event) {
+
+                if (event.key === "Enter") {
+
+                    if (answered) {
+                        nextWord();
+                    } else {
+                        checkAnswer();
+                    }
+
+                }
+
+            });
+
+            // Повторне проходження тесту
+
+            $("#restartButton").on("click", function () {
+
+                currentIndex = 0;
+                correct = 0;
+                incorrect = 0;
+                answered = false;
+
+                $("#correctCount").text("0");
+                $("#incorrectCount").text("0");
+
+                $("#resultModal").hide();
+
+                shuffleWords();
+                showWord();
+
+            });
+
+            // Запуск застосунку
+
+            shuffleWords();
+            showWord();
+
+        });
+    </script>
+
+</body>
+</html>
